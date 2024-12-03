@@ -19,24 +19,21 @@
 #include <optional>
 #include <utility>
 
-template <typename T>
+template <typename T, typename E = GenericErr>
 class Result {
 private:
     T value;
-    std::optional<Err> error;
+    std::optional<E> error;
 
 public:
-    // Constructors
-    Result(const T& value, std::optional<Err> error = std::nullopt)
-        : value(value), error(error) {}
-
-    Result(T&& value, std::optional<Err> error = std::nullopt)
+    // Constructor
+    Result(T&& value, std::optional<E> error = std::nullopt)
         : value(std::move(value)), error(error) {}
 
     // Methods
     bool has_error() const { return error.has_value(); }
 
-    T& unwrap() {
+    const T& unwrap() const {
         if (has_error()) {
             panic(error.value().get_message().c_str());
         }
@@ -47,7 +44,7 @@ public:
         return has_error() ? default_value : value;
     }
 
-    const Err& get_error() const {
+    const GenericErr& get_error() const {
         if (!has_error()) {
             panic("Attempted to get error from a successful Result");
         }
@@ -55,6 +52,27 @@ public:
     }
 };
 
-std::ostream& operator<<(std::ostream& os, const Err& err);
+template <typename T, typename E = GenericErr>
+Result<T, E> Ok(T&& value) {
+    return Result<T, E>(std::forward<T>(value), std::nullopt);
+}
+
+template <typename E, typename T = void>
+Result<T, E> Err(E&& value) {
+    return Result<T, E>(T{}, std::optional<E>(std::forward<E>(value)));
+}
+
+#include <iostream>
+
+template <typename T, typename E>
+std::ostream& operator<<(std::ostream& os, const Result<T, E>& res) {
+    os << "Result(";
+    if (res.has_error()) {
+        os << "None, Err(" << res.get_error() << "))";
+    } else {
+        os << "Some(" << res.unwrap() << "), None)";
+    }
+    return os;
+}
 
 #endif

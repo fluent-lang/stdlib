@@ -17,15 +17,15 @@
 #include <string>
 #include <iostream>
 
-class Err {
-private:
-    std::string message;
+class GenericErr {
+    private:
+        std::string message;
 
-public:
-    Err(std::string message);  // Constructor declaration
-    std::string get_message() const;  // Method declaration
+    public:
+        GenericErr(std::string message);
+        std::string get_message() const;
 };
 
-std::ostream& operator<<(std::ostream& os, const Err& err);
+std::ostream& operator<<(std::ostream& os, const GenericErr& err);
 
 #endif
