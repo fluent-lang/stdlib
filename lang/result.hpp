@@ -18,6 +18,7 @@
 #include "panic.h"
 #include <optional>
 #include <utility>
+#include <iostream>
 
 template <typename T, typename E = GenericErr>
 class Result {
@@ -61,8 +62,6 @@ template <typename E, typename T = void>
 Result<T, E> Err(E&& value) {
     return Result<T, E>(T{}, std::optional<E>(std::forward<E>(value)));
 }
-
-#include <iostream>
 
 template <typename T, typename E>
 std::ostream& operator<<(std::ostream& os, const Result<T, E>& res) {
