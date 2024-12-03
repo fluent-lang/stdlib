@@ -16,13 +16,13 @@
 #include <iostream>
 #include <string>
 
-Err::Err(std::string message) : message(std::move(message)) {}
+GenericErr::GenericErr(std::string message) : message(std::move(message)) {}
 
-std::string Err::get_message() const {
+std::string GenericErr::get_message() const {
     return message;
 }
 
-std::ostream& operator<<(std::ostream& os, const Err& err) {
+std::ostream& operator<<(std::ostream& os, const GenericErr& err) {
     os << "Err(" << err.get_message() << ")";
     return os;
 }
