@@ -23,6 +23,12 @@ void print(const T& str) {
 
 template <typename T>
 void println(const T& str) {
+    // Check if the type is a pointer
+    if constexpr (std::is_pointer_v<T>) {
+        std::cout << *str << std::endl;
+        return;
+    }
+
     std::cout << str << std::endl;
 }
 
