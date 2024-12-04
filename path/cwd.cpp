@@ -11,23 +11,25 @@
     Copyright (c) 2024 Rodrigo R. & all Surf contributors
 */
 
-#include "cwd.h"
+#include "cwd.hpp"
 
 #include <iostream>
 #include <unistd.h>
 #include <limits.h>
-#include "../lang/result.h"
+#include "../lang/result.hpp"
 
-Result<std::string> get_cwd() {
+using namespace std;
+
+Result<string, GenericErr> get_cwd(const char* file, int f_line) {
     // Allocate a buffer for the current working directory
     char cwd[PATH_MAX];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        return Result(std::string(cwd), optional<Err>());
+        return Result<string, GenericErr>(string(cwd), nullopt);
     }
 
     return Result(
-        std::string(""), 
-        optional<Err>(Err("Failed to get current working directory"))
+        string(""), 
+        optional<GenericErr>(GenericErr("Failed to get current working directory", file, f_line))
     );
 }

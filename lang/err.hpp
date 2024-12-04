@@ -22,8 +22,8 @@ class GenericErr {
         std::string message;
 
     public:
-        GenericErr(std::string message);
-        std::string get_message() const;
+        GenericErr(std::string message, const char* file, int f_line);
+        std::string get_message(const char* file, int f_line) const;
 };
 
 std::ostream& operator<<(std::ostream& os, const GenericErr& err);

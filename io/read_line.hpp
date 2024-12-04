@@ -15,7 +15,8 @@
 #define READ_LINE_H
 #include <string>
 #include "../lang/result.hpp"
+#include "../lang/err.hpp"
 
-Result<std::string> read_line();
+Result<std::string, GenericErr> read_line(const char* file, int f_line);
 
 #endif

@@ -14,11 +14,13 @@
 #include "http_response.hpp"
 #include <map>
 
+using namespace std;
+
 HttpResponse::HttpResponse(
     MessageEncoding message_encoding,
-    std::string message,
-    std::string status_detail,
-    std::map<std::string, std::string> headers,
+    string message,
+    string status_detail,
+    map<string, string> headers,
     int status_code
 ) :
     message_encoding(message_encoding),
@@ -27,22 +29,22 @@ HttpResponse::HttpResponse(
     headers(headers),
     status_code(status_code) {}
 
-std::string HttpResponse::get_message() {
+string HttpResponse::get_message(const char* file, int line) {
     return message;
 }
 
-MessageEncoding HttpResponse::get_message_encoding() {
+MessageEncoding HttpResponse::get_message_encoding(const char* file, int line) {
     return message_encoding;
 }
 
-int HttpResponse::get_status_code() {
+int HttpResponse::get_status_code(const char* file, int line) {
     return status_code;
 }
 
-std::string HttpResponse::get_status_detail() {
+string HttpResponse::get_status_detail(const char* file, int line) {
     return status_detail;
 }
 
-std::map<std::string, std::string> HttpResponse::get_headers() {
+map<string, string> HttpResponse::get_headers(const char* file, int line) {
     return headers;
 }

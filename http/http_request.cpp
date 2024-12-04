@@ -13,13 +13,15 @@
 
 #include "http_request.hpp"
 
+using namespace std;
+
 HttpRequest::HttpRequest(
     MessageEncoding message_encoding,
-    std::string body,
-    std::string origin,
-    std::string path,
-    std::string method,
-    std::map<std::string, std::string> headers
+    string body,
+    string origin,
+    string path,
+    string method,
+    map<string, string> headers
 ) : 
     message_encoding(message_encoding),
     body(body),
@@ -28,26 +30,26 @@ HttpRequest::HttpRequest(
     method(method),
     headers(headers) {}
 
-MessageEncoding HttpRequest::get_message_encoding() {
+MessageEncoding HttpRequest::get_message_encoding(const char* file, int line) {
     return message_encoding;
 }
 
-std::string HttpRequest::get_body() {
+string HttpRequest::get_body(const char* file, int line) {
     return body;
 }
 
-std::string HttpRequest::get_origin() {
+string HttpRequest::get_origin(const char* file, int line) {
     return origin;
 }
 
-std::string HttpRequest::get_path() {
+string HttpRequest::get_path(const char* file, int line) {
     return path;
 }
 
-std::string HttpRequest::get_method() {
+string HttpRequest::get_method(const char* file, int line) {
     return method;
 }
 
-std::map<std::string, std::string> HttpRequest::get_headers() {
+map<string, string> HttpRequest::get_headers(const char* file, int line) {
     return headers;
 }

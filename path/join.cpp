@@ -11,11 +11,11 @@
     Copyright (c) 2024 Rodrigo R. & all Surf contributors
 */
 
-#include "join.h"
+#include "join.hpp"
 
 #include <string>
 
-std::string get_path_separator() {
+std::string get_path_separator(const char* file, int f_line) {
     #ifdef _WIN32
         return "\\";
     #else
@@ -23,7 +23,7 @@ std::string get_path_separator() {
     #endif
 }
 
-std::string join_path(const std::string* path1, const std::string* path2) {
+std::string join_path(const std::string* path1, const std::string* path2, const char* file, int f_line) {
     std::string path = *path1;
 
     if (path[path.length() - 1] != '/') {

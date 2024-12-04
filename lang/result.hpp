@@ -34,9 +34,9 @@ public:
     // Methods
     bool has_error() const { return error.has_value(); }
 
-    const T& unwrap() const {
+    const T& unwrap(const char* file, int line) const {
         if (has_error()) {
-            panic(error.value().get_message().c_str());
+            panic(error.value().get_message().c_str(), file, line);
         }
         return value;
     }
@@ -45,9 +45,9 @@ public:
         return has_error() ? default_value : value;
     }
 
-    const GenericErr& get_error() const {
+    const GenericErr& get_error(const char* file, int line) const {
         if (!has_error()) {
-            panic("Attempted to get error from a successful Result");
+            panic("Attempted to get error from a successful Result", file, line);
         }
         return error.value();
     }

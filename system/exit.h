@@ -14,6 +14,6 @@
 #ifndef EXIT_H
 #define EXIT_H
 
-[[noreturn]] void exit(int status) noexcept;
+[[noreturn]] void exit(int status, const char* file, int f_line) noexcept;
 
 #endif

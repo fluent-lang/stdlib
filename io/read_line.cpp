@@ -18,14 +18,16 @@
 #include <string>
 #include <optional>
 
-Result<std::string> read_line() {
-    try {
-        std::string line;
+using namespace std;
 
-        getline(std::cin, line);
-        return Result(line, std::optional<Err>());
-    } catch(const std::exception& e) {
-        return Result(std::string(""), std::optional<Err>(Err(e.what())));
+Result<string, GenericErr> read_line(const char* file, int f_line) {
+    try {
+        string line;
+
+        getline(cin, line);
+        return Result<string, GenericErr>(move(line), nullopt);
+    } catch(const exception& e) {
+        return Result<string, GenericErr>(string(""), optional<GenericErr>(GenericErr(e.what(), file, f_line)));
     }
     
 }

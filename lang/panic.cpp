@@ -14,7 +14,10 @@
 #include <iostream>
 #include "panic.h"
 
-void panic(const char* message) {
-    std::cerr << "Panic: " << message << std::endl;
+void panic(const char* message, const char* file, int line) {
+    std::cerr << 
+        "Panic: " << message << std::endl
+        << "    Thread panicked at '" << file << "'" << std::endl
+        << "      line " << line << std::endl;
     exit(EXIT_FAILURE);
 }

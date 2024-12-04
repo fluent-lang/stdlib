@@ -16,8 +16,9 @@
 
 #include <string>
 #include "../lang/result.hpp"
+#include "../lang/err.hpp"
 
-Result<std::string> get_env(const std::string* key);
-Result<bool> set_env(const std::string* key, const std::string* value);
+Result<std::string, GenericErr> get_env(const std::string* key, const char* file, int f_line);
+Result<bool, GenericErr> set_env(const std::string* key, const std::string* value, const char* file, int f_line);
 
 #endif

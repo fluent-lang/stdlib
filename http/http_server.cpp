@@ -26,7 +26,9 @@
 #include <arpa/inet.h>
 #include <optional>
 
-Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest)) {
+using namespace std;
+
+Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(HttpRequest), const char* file, int f_line) {
     int server_fd, new_socket;
     struct sockaddr_in address, client_address;
     int addrlen = sizeof(address);
@@ -34,7 +36,7 @@ Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest))
 
     // Create socket
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        return Result(false, std::optional<Err>(Err("Socket creation failed")));
+        return Result(false, optional<GenericErr>(GenericErr("Socket creation failed", file, f_line)));
     }
 
     // Setup server address
@@ -44,12 +46,12 @@ Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest))
 
     // Bind socket
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        return Result(false, std::optional<Err>(Err("Bind failed")));
+        return Result(false, optional<GenericErr>(GenericErr("Bind failed", file, f_line)));
     }
 
     // Listen for connections
     if (listen(server_fd, 3) < 0) {
-        return Result(false, std::optional<Err>(Err("Listen failed")));
+        return Result(false, optional<GenericErr>(GenericErr("Listen failed", file, f_line)));
     }
 
     // Accept connections
@@ -73,26 +75,26 @@ Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest))
         }
 
         // Parse the HTTP request
-        std::istringstream request_stream(buffer);
-        std::string line;
-        std::getline(request_stream, line);
-        std::istringstream request_line(line);
-        std::string method, path, version;
+        istringstream request_stream(buffer);
+        string line;
+        getline(request_stream, line);
+        istringstream request_line(line);
+        string method, path, version;
 
         request_line >> method >> path >> version;
 
-        std::map<std::string, std::string> headers;
-        while (std::getline(request_stream, line) && line != "\r") {
-            std::istringstream header_line(line);
-            std::string key, value;
-            std::getline(header_line, key, ':');
-            std::getline(header_line, value);
+        map<string, string> headers;
+        while (getline(request_stream, line) && line != "\r") {
+            istringstream header_line(line);
+            string key, value;
+            getline(header_line, key, ':');
+            getline(header_line, value);
             headers[key] = value;
         }
 
-        std::string body;
+        string body;
         if (headers.find("Content-Length") != headers.end()) {
-            int content_length = std::stoi(headers["Content-Length"]);
+            int content_length = stoi(headers["Content-Length"]);
             body.resize(content_length);
             request_stream.read(&body[0], content_length);
         }
@@ -118,15 +120,15 @@ Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest))
         // Use the callback to generate a response
         HttpResponse response = callback(request);
 
-        std::string response_str = "HTTP/1.1 ";
+        string response_str = "HTTP/1.1 ";
 
-        response_str += std::to_string(response.get_status_code()) + " " + response.get_status_detail() + "\n";
+        response_str += to_string(response.get_status_code(file, f_line)) + " " + response.get_status_detail(file, f_line) + "\n";
 
-        for (auto const& [key, val] : response.get_headers()) {
+        for (auto const& [key, val] : response.get_headers(file, f_line)) {
             response_str += key + ": " + val + "\n";
         }
 
-        response_str += "\n" + response.get_message();
+        response_str += "\n" + response.get_message(file, f_line);
 
         send(new_socket, response_str.c_str(), response_str.size(), 0);
 
@@ -134,5 +136,5 @@ Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest))
         close(new_socket);
     }
 
-    return Result(true, std::optional<Err>());
+    return Result<bool, GenericErr>(true, nullopt);
 }

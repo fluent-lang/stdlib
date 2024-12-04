@@ -16,7 +16,8 @@
 
 #include <string>
 #include "../lang/result.hpp"
+#include "../lang/err.hpp"
 
-Result<std::string> get_cwd();
+Result<std::string, GenericErr> get_cwd(const char* file, int f_line);
 
 #endif

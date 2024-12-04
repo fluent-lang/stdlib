@@ -14,7 +14,7 @@
 #ifndef HEAP_H
 #define HEAP_H
 
-void* allocate(int size);
-void deallocate(void* ptr);
+void* allocate(int size, const char* file, int line);
+void deallocate(void* ptr, const char* file, int line);
 
 #endif

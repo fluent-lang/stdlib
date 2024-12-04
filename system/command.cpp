@@ -18,6 +18,6 @@
 #include "../lang/result.hpp"
 
 // Executes a shell command and returns the output
-void exec(const char* cmd) {
+void exec(const char* cmd, const char* file, int f_line) {
     system(cmd);
 }
