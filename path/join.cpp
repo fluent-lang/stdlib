@@ -15,7 +15,7 @@
 
 #include <string>
 
-std::string get_path_separator(const char* file, int f_line) {
+std::string get_path_separator() {
     #ifdef _WIN32
         return "\\";
     #else

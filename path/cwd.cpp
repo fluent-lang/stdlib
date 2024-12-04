@@ -20,7 +20,7 @@
 
 using namespace std;
 
-Result<string, GenericErr> get_cwd(const char* file, int f_line) {
+Result<string, GenericErr> get_cwd() {
     // Allocate a buffer for the current working directory
     char cwd[PATH_MAX];
 

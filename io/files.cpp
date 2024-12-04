@@ -26,11 +26,11 @@
 
 using namespace std;
 
-Result<bool, GenericErr> write_file(const string* path, const string* content, const char* f, int l) {
+Result<bool, GenericErr> write_file(const string* path, const string* content) {
 
     // First check if the file exists
-    if (!file_exists(path, f, l).unwrap(f, l)) {
-        return Result(false, optional<GenericErr>(GenericErr("File does not exist", f, l)));
+    if (!file_exists(path).unwrap(f, l)) {
+        return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Open the file
@@ -39,7 +39,7 @@ Result<bool, GenericErr> write_file(const string* path, const string* content, c
 
     // Something went wrong
     if (!file.is_open()) {
-        return Result(false, optional<GenericErr>(GenericErr("Failed to create file", f, l)));
+        return Result(false, optional<GenericErr>(GenericErr("Failed to create file")));
     }
 
     // Directly write the content to the file
@@ -52,11 +52,11 @@ Result<bool, GenericErr> write_file(const string* path, const string* content, c
 
 }
 
-Result<string, GenericErr> read_file(const string* path, const char* f, int l) {
+Result<string, GenericErr> read_file(const string* path) {
 
     // First check if the file exists
-    if (!file_exists(path, f, l).unwrap(f, l)) {
-        return Result(string(""), optional<GenericErr>(GenericErr("File does not exist", f, l)));
+    if (!file_exists(path).unwrap(f, l)) {
+        return Result(string(""), optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Open the file
@@ -64,7 +64,7 @@ Result<string, GenericErr> read_file(const string* path, const char* f, int l) {
     file.open(*path);
 
     if (!file.is_open()) {
-        return Result<string>("", optional<GenericErr>(GenericErr("Failed to open file", f, l)));
+        return Result<string>("", optional<GenericErr>(GenericErr("Failed to open file")));
     }
 
     string content;
@@ -81,34 +81,34 @@ Result<string, GenericErr> read_file(const string* path, const char* f, int l) {
     return Result<string, GenericErr>(move(content), nullopt);
 }
 
-Result<bool, GenericErr> delete_file(const string* path, const char* f, int l) {
+Result<bool, GenericErr> delete_file(const string* path) {
     
     // First check if the file exists
-    if (!file_exists(path, f, l).unwrap(f, l)) {
-        return Result(false, optional<GenericErr>(GenericErr("File does not exist", f, l)));
+    if (!file_exists(path).unwrap(f, l)) {
+        return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Remove the file
     if (remove(path->c_str()) != 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Failed to delete file", f, l)));
+        return Result(false, optional<GenericErr>(GenericErr("Failed to delete file")));
     }
 
     return Result<bool, GenericErr>(true, nullopt);
 
 }
 
-Result<vector<string>, GenericErr> walk_dir(const string* path, const char* f, int l) {
+Result<vector<string>, GenericErr> walk_dir(const string* path) {
 
     // First check if the file exists
-    if (!file_exists(path, f, l).unwrap(f, l)) {
-        return Result(vector<string>(), optional<GenericErr>(GenericErr("File does not exist", f, l)));
+    if (!file_exists(path).unwrap(f, l)) {
+        return Result(vector<string>(), optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Check if it's a directory
-    if (!is_dir(path, f, l).unwrap(f, l)) {
+    if (!is_dir(path).unwrap(f, l)) {
         return Result(
             vector<string>(),
-            optional<GenericErr>(GenericErr("Path is not a directory", f, l))
+            optional<GenericErr>(GenericErr("Path is not a directory"))
         );
     }
 
@@ -118,7 +118,7 @@ Result<vector<string>, GenericErr> walk_dir(const string* path, const char* f, i
     if (dir == NULL) {
         return Result(
             vector<string>(),
-            optional<GenericErr>(GenericErr("Failed to open directory", f, l))
+            optional<GenericErr>(GenericErr("Failed to open directory"))
         );
     }
 
@@ -137,7 +137,7 @@ Result<vector<string>, GenericErr> walk_dir(const string* path, const char* f, i
 
 }
 
-Result<bool, GenericErr> file_exists(const string* path, const char* f, int l) {
+Result<bool, GenericErr> file_exists(const string* path) {
 
     // Check if the file exists
     if (filesystem::exists(*path)) {
@@ -148,11 +148,11 @@ Result<bool, GenericErr> file_exists(const string* path, const char* f, int l) {
 
 }
 
-Result<bool, GenericErr> is_dir(const string* path, const char* f, int l) {
+Result<bool, GenericErr> is_dir(const string* path) {
 
     // First check if the file exists
-    if (!file_exists(path, f, l).unwrap(f, l)) {
-        return Result(false, optional<GenericErr>(GenericErr("File does not exist", f, l)));
+    if (!file_exists(path).unwrap(f, l)) {
+        return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Check if the path is a directory
@@ -164,7 +164,7 @@ Result<bool, GenericErr> is_dir(const string* path, const char* f, int l) {
 
 }
 
-Result<bool, GenericErr> remove_dir(const string* path, const char* f, int l) {
+Result<bool, GenericErr> remove_dir(const string* path) {
 
     // Remember that rmdir from unistd.h only works for empty directories
     // To fix that while still maintaning performance, we can use a queue
@@ -175,7 +175,7 @@ Result<bool, GenericErr> remove_dir(const string* path, const char* f, int l) {
     while (!queue.empty()) {
         // Get always the first element
         string* current_path = &queue[0];
-        Result<bool> is_dir_result = is_dir(current_path, f, l);
+        Result<bool> is_dir_result = is_dir(current_path);
 
         // Cannot read the directory -> Return the error without crashing
         if (is_dir_result.has_error()) {
@@ -184,7 +184,7 @@ Result<bool, GenericErr> remove_dir(const string* path, const char* f, int l) {
 
         if (is_dir_result.unwrap(f, l)) {
             // See if the directory is empty
-            Result<vector<string>> files = walk_dir(current_path, f, l);
+            Result<vector<string>> files = walk_dir(current_path);
 
             // Cannot read the directory -> Return the error without crashing
             if (files.has_error()) {
@@ -196,7 +196,7 @@ Result<bool, GenericErr> remove_dir(const string* path, const char* f, int l) {
             // If the directory is empty, remove it
             if (files_vec.size() == 2) {
                 if (rmdir(current_path->c_str()) != 0) {
-                    return Result<bool, GenericErr>(false, optional<GenericErr>(GenericErr("Failed to delete directory", f, l)));
+                    return Result<bool, GenericErr>(false, optional<GenericErr>(GenericErr("Failed to delete directory")));
                 }
             } else {
                 // Add all the files to the queue
@@ -212,7 +212,7 @@ Result<bool, GenericErr> remove_dir(const string* path, const char* f, int l) {
             }
         } else {
             // Try to remove the file
-            Result<bool, GenericErr> delete_result = delete_file(current_path, f, l);
+            Result<bool, GenericErr> delete_result = delete_file(current_path);
 
             // Cannot delete the file -> Return the error without crashing
             if (delete_result.has_error()) {

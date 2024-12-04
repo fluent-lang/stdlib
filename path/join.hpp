@@ -16,7 +16,7 @@
 
 #include <string>
 
-std::string get_path_separator(const char* file, int f_line);
+std::string get_path_separator();
 std::string join_path(const std::string* path1, const std::string* path2);
 
 #endif

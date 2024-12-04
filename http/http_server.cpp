@@ -122,13 +122,13 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
         string response_str = "HTTP/1.1 ";
 
-        response_str += to_string(response.get_status_code(file, f_line)) + " " + response.get_status_detail(file, f_line) + "\n";
+        response_str += to_string(response.get_status_code()) + " " + response.get_status_detail() + "\n";
 
-        for (auto const& [key, val] : response.get_headers(file, f_line)) {
+        for (auto const& [key, val] : response.get_headers()) {
             response_str += key + ": " + val + "\n";
         }
 
-        response_str += "\n" + response.get_message(file, f_line);
+        response_str += "\n" + response.get_message();
 
         send(new_socket, response_str.c_str(), response_str.size(), 0);
 

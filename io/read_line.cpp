@@ -20,7 +20,7 @@
 
 using namespace std;
 
-Result<string, GenericErr> read_line(const char* file, int f_line) {
+Result<string, GenericErr> read_line() {
     try {
         string line;
 

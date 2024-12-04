@@ -18,7 +18,7 @@
 
 GenericErr::GenericErr(std::string message) : message(std::move(message)) {}
 
-std::string GenericErr::get_message(const char* file, int f_line) const {
+std::string GenericErr::get_message() const {
     return message;
 }
 
