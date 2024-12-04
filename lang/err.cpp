@@ -16,7 +16,7 @@
 #include <iostream>
 #include <string>
 
-GenericErr::GenericErr(std::string message, const char* file, int f_line) : message(std::move(message)) {}
+GenericErr::GenericErr(std::string message) : message(std::move(message)) {}
 
 std::string GenericErr::get_message(const char* file, int f_line) const {
     return message;

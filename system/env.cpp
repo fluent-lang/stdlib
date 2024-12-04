@@ -19,24 +19,24 @@
 
 using namespace std;
 
-Result<string, GenericErr> get_env(const string* key, const char* file, int f_line) {
+Result<string, GenericErr> get_env(const string* key) {
     char* value = getenv(key->c_str());
 
     if (value == NULL) {
         return Result(
             string(""), 
-            optional<GenericErr>(GenericErr("Environment variable not found", file, f_line))
+            optional<GenericErr>(GenericErr("Environment variable not found"))
         );
     }
 
     return Result<string, GenericErr>(string(value), nullopt);
 }
 
-Result<bool, GenericErr> set_env(const string* key, const string* value, const char* file, int f_line) {
+Result<bool, GenericErr> set_env(const string* key, const string* value) {
     if (setenv(key->c_str(), value->c_str(), 1) != 0) {
         return Result(
             false, 
-            optional<GenericErr>(GenericErr("Failed to set environment variable", file, f_line))
+            optional<GenericErr>(GenericErr("Failed to set environment variable"))
         );
     }
 

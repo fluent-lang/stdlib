@@ -28,7 +28,7 @@
 
 using namespace std;
 
-Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(HttpRequest), const char* file, int f_line) {
+Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(HttpRequest)) {
     int server_fd, new_socket;
     struct sockaddr_in address, client_address;
     int addrlen = sizeof(address);
@@ -36,7 +36,7 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
     // Create socket
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Socket creation failed", file, f_line)));
+        return Result(false, optional<GenericErr>(GenericErr("Socket creation failed")));
     }
 
     // Setup server address
@@ -46,12 +46,12 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
     // Bind socket
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Bind failed", file, f_line)));
+        return Result(false, optional<GenericErr>(GenericErr("Bind failed")));
     }
 
     // Listen for connections
     if (listen(server_fd, 3) < 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Listen failed", file, f_line)));
+        return Result(false, optional<GenericErr>(GenericErr("Listen failed")));
     }
 
     // Accept connections

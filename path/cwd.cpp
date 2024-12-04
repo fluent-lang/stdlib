@@ -30,6 +30,6 @@ Result<string, GenericErr> get_cwd(const char* file, int f_line) {
 
     return Result(
         string(""), 
-        optional<GenericErr>(GenericErr("Failed to get current working directory", file, f_line))
+        optional<GenericErr>(GenericErr("Failed to get current working directory"))
     );
 }

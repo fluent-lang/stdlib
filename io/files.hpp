@@ -20,10 +20,10 @@
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
 
-Result<bool> write_file(const std::string* path, const std::string* content, const char* file, int line);
-Result<std::string> read_file(const std::string* path, const char* file, int line);
-Result<bool> delete_file(const std::string* path, const char* file, int line);
-Result<std::vector<std::string>> delete_dir(const std::string* path, const char* file, int line);
-Result<std::vector<std::string>> walk_dir(const std::string* path, const char* file, int line);
+Result<bool> write_file(const std::string* path, const std::string* content);
+Result<std::string> read_file(const std::string* path);
+Result<bool> delete_file(const std::string* path);
+Result<std::vector<std::string>> delete_dir(const std::string* path);
+Result<std::vector<std::string>> walk_dir(const std::string* path);
 
 #endif

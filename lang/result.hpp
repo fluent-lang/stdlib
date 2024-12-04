@@ -36,7 +36,7 @@ public:
 
     const T& unwrap(const char* file, int line) const {
         if (has_error()) {
-            panic(error.value().get_message().c_str(), file, line);
+            panic(error.value().get_message().c_str(), );
         }
         return value;
     }
@@ -47,7 +47,7 @@ public:
 
     const GenericErr& get_error(const char* file, int line) const {
         if (!has_error()) {
-            panic("Attempted to get error from a successful Result", file, line);
+            panic("Attempted to get error from a successful Result", );
         }
         return error.value();
     }

@@ -71,7 +71,7 @@ Result<string, GenericErr> read_file(const string* path, const char* f, int l) {
     string line;
 
     // Read line by line
-    while (getline(file, line)) {
+    while (getline()) {
         content += line + "\n";
     }
 

@@ -6,6 +6,6 @@
 #include "http_server.hpp"
 #include "../lang/result.hpp"
 
-Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest), const char* file, int line);
+Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest));
 
 #endif

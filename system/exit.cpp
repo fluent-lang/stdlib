@@ -15,6 +15,6 @@
 
 #include <cstdlib>
 
-[[noreturn]] void exit(int status, const char* file, int f_line) {
+[[noreturn]] void exit(int status) {
     std::exit(status);
 }

@@ -27,7 +27,7 @@ Result<string, GenericErr> read_line(const char* file, int f_line) {
         getline(cin, line);
         return Result<string, GenericErr>(move(line), nullopt);
     } catch(const exception& e) {
-        return Result<string, GenericErr>(string(""), optional<GenericErr>(GenericErr(e.what(), file, f_line)));
+        return Result<string, GenericErr>(string(""), optional<GenericErr>(GenericErr(e.what())));
     }
     
 }

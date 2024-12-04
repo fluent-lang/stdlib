@@ -16,12 +16,12 @@
 #include <cstdlib>
 
 // Allocates memory on the heap
-void* allocate(int size, const char* file, int line) {
+void* allocate(int size) {
     return malloc(size);
 }
 
 // Deallocates memory on the heap
-void deallocate(void* ptr, const char* file, int line) {
+void deallocate(void* ptr) {
     free(ptr);
 
     // Set the pointer to null
