@@ -18,18 +18,24 @@
 
 template <typename T>
 void print(const T& str) {
+    // Handle string literals
+    if constexpr (std::is_same_v<T, const char*>) {
+        std::cout << str;
+        return;
+        
+        // Check if the type is a pointer
+    } else if constexpr (std::is_pointer_v<T>) {
+        std::cout << *str;
+        return;
+    }
+
     std::cout << str;
 }
 
 template <typename T>
 void println(const T& str) {
-    // Check if the type is a pointer
-    if constexpr (std::is_pointer_v<T>) {
-        std::cout << *str << std::endl;
-        return;
-    }
-
-    std::cout << str << std::endl;
+    print(str);
+    std::cout << std::endl;
 }
 
 #endif
