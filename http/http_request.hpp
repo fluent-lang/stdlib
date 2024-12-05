@@ -37,12 +37,12 @@ class HttpRequest {
             std::map<std::string, std::string> headers
         );
 
-        MessageEncoding get_message_encoding(const char* file, int line);
-        std::string get_body(const char* file, int line);
-        std::string get_origin(const char* file, int line);
-        std::string get_path(const char* file, int line);
-        std::string get_method(const char* file, int line);
-        std::map<std::string, std::string> get_headers(const char* file, int line);
+        MessageEncoding get_message_encoding();
+        std::string get_body();
+        std::string get_origin();
+        std::string get_path();
+        std::string get_method();
+        std::map<std::string, std::string> get_headers();
 };
 
 #endif

@@ -29,22 +29,22 @@ HttpResponse::HttpResponse(
     headers(headers),
     status_code(status_code) {}
 
-string HttpResponse::get_message(const char* file, int line) {
+string HttpResponse::get_message() {
     return message;
 }
 
-MessageEncoding HttpResponse::get_message_encoding(const char* file, int line) {
+MessageEncoding HttpResponse::get_message_encoding() {
     return message_encoding;
 }
 
-int HttpResponse::get_status_code(const char* file, int line) {
+int HttpResponse::get_status_code() {
     return status_code;
 }
 
-string HttpResponse::get_status_detail(const char* file, int line) {
+string HttpResponse::get_status_detail() {
     return status_detail;
 }
 
-map<string, string> HttpResponse::get_headers(const char* file, int line) {
+map<string, string> HttpResponse::get_headers() {
     return headers;
 }

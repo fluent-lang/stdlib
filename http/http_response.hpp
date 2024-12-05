@@ -35,11 +35,11 @@ class HttpResponse {
             int status_code
         );
 
-        std::string get_message(const char* file, int line);
-        MessageEncoding get_message_encoding(const char* file, int line);
-        int get_status_code(const char* file, int line);
-        std::string get_status_detail(const char* file, int line);
-        std::map<std::string, std::string> get_headers(const char* file, int line);
+        std::string get_message();
+        MessageEncoding get_message_encoding();
+        int get_status_code();
+        std::string get_status_detail();
+        std::map<std::string, std::string> get_headers();
 };
 
 #endif

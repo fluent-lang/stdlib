@@ -30,26 +30,26 @@ HttpRequest::HttpRequest(
     method(method),
     headers(headers) {}
 
-MessageEncoding HttpRequest::get_message_encoding(const char* file, int line) {
+MessageEncoding HttpRequest::get_message_encoding() {
     return message_encoding;
 }
 
-string HttpRequest::get_body(const char* file, int line) {
+string HttpRequest::get_body() {
     return body;
 }
 
-string HttpRequest::get_origin(const char* file, int line) {
+string HttpRequest::get_origin() {
     return origin;
 }
 
-string HttpRequest::get_path(const char* file, int line) {
+string HttpRequest::get_path() {
     return path;
 }
 
-string HttpRequest::get_method(const char* file, int line) {
+string HttpRequest::get_method() {
     return method;
 }
 
-map<string, string> HttpRequest::get_headers(const char* file, int line) {
+map<string, string> HttpRequest::get_headers() {
     return headers;
 }
