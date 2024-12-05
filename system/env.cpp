@@ -19,8 +19,8 @@
 
 using namespace std;
 
-Result<string, GenericErr> get_env(const string* key) {
-    char* value = getenv(key->c_str());
+Result<string, GenericErr> get_env(const char* key) {
+    char* value = getenv(key);
 
     if (value == NULL) {
         return Result(
@@ -32,8 +32,8 @@ Result<string, GenericErr> get_env(const string* key) {
     return Result<string, GenericErr>(string(value), nullopt);
 }
 
-Result<bool, GenericErr> set_env(const string* key, const string* value) {
-    if (setenv(key->c_str(), value->c_str(), 1) != 0) {
+Result<bool, GenericErr> set_env(const char* key, const char* value) {
+    if (setenv(key, value, 1) != 0) {
         return Result(
             false, 
             optional<GenericErr>(GenericErr("Failed to set environment variable"))
