@@ -19,25 +19,49 @@
 
 template <typename T>
 class Vec {
+private:
+    std::vector<T> data;
 
-    private:
-        std::vector<T> data;
+public:
+    Vec();
+    ~Vec();
 
-    public:
-        Vec();
-        ~Vec();
+    void push(T item);
+    void push_all(Vec<T> other);
+    void clear();
+    Optional<T> at(int index) const;
+    int length() const;
+    bool is_empty() const;
+    Vec<T> slice(int start, int end) const;
+    Vec<T> remove(int start, int end) const;
+    Vec<T> remove_all(T item) const;
+    Vec<T> insert(int index, T item) const;
+    Vec<T> insert_all(int index, Vec<T> items) const;
 
-        void push(T item);
-        void push_all(Vec<T> other);
-        void clear();
-        Optional<T> at(int index);
-        int length();
-        bool is_empty();
-        Vec<T> slice(int start, int end);
-        Vec<T> remove(int start, int end);
-        Vec<T> remove_all(T item);
-        Vec<T> insert(int index, T item);
-        Vec<T> insert_all(int index, Vec<T> items);
+    // Iterators for range-based for loops
+    typename std::vector<T>::const_iterator begin() const;
+    typename std::vector<T>::const_iterator end() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const Vec<T>& res) {
+        os << "Vec[";
+
+        int size = res.length();
+        int iterated_items = 0;
+
+        for (const auto& item : res) {
+            os << item;
+
+            if (iterated_items != size - 1) {
+                os << ", ";
+            }
+
+            iterated_items++;
+        }
+
+        os << "]";
+
+        return os;
+    }
 };
 
 template <typename T>
@@ -68,26 +92,25 @@ void Vec<T>::clear() {
 }
 
 template <typename T>
-Optional<T> Vec<T>::at(int index) {
+Optional<T> Vec<T>::at(int index) const {
     if (index < 0 || index >= data.size()) {
         return Optional<T>();
     }
-
     return Optional<T>(data.at(index));
 }
 
 template <typename T>
-int Vec<T>::length() {
+int Vec<T>::length() const {
     return data.size();
 }
 
 template <typename T>
-bool Vec<T>::is_empty() {
+bool Vec<T>::is_empty() const {
     return data.empty();
 }
 
 template <typename T>
-Vec<T> Vec<T>::slice(int start, int end) {
+Vec<T> Vec<T>::slice(int start, int end) const {
     Vec<T> sliced_vec = Vec<T>();
 
     for (int i = start; i < end; i++) {
@@ -98,7 +121,7 @@ Vec<T> Vec<T>::slice(int start, int end) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::remove(int start, int end) {
+Vec<T> Vec<T>::remove(int start, int end) const {
     Vec<T> removed_vec = Vec<T>();
 
     for (int i = 0; i < data.size(); i++) {
@@ -111,7 +134,7 @@ Vec<T> Vec<T>::remove(int start, int end) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::remove_all(T item) {
+Vec<T> Vec<T>::remove_all(T item) const {
     Vec<T> removed_vec = Vec<T>();
 
     for (T current_item : data) {
@@ -124,7 +147,7 @@ Vec<T> Vec<T>::remove_all(T item) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::insert(int index, T item) {
+Vec<T> Vec<T>::insert(int index, T item) const {
     Vec<T> inserted_vec = Vec<T>();
 
     for (int i = 0; i < data.size(); i++) {
@@ -139,7 +162,7 @@ Vec<T> Vec<T>::insert(int index, T item) {
 }
 
 template <typename T>
-Vec<T> Vec<T>::insert_all(int index, Vec<T> items) {
+Vec<T> Vec<T>::insert_all(int index, Vec<T> items) const {
     Vec<T> inserted_vec = Vec<T>();
 
     for (int i = 0; i < data.size(); i++) {
@@ -156,25 +179,13 @@ Vec<T> Vec<T>::insert_all(int index, Vec<T> items) {
 }
 
 template <typename T>
-std::ostream& operator<<(std::ostream& os, const Vec<T>& res) {
-    os << "Vec[";
+typename std::vector<T>::const_iterator Vec<T>::begin() const {
+    return data.begin();
+}
 
-    int size = res.length();
-    int iterated_items = 0;
-
-    for (const auto& item : res) {
-        os << item;
-
-        if (iterated_items != size - 1) {
-            os << ", ";
-        }
-
-        iterated_items++;
-    }
-
-    os << "]";
-    
-    return os;
+template <typename T>
+typename std::vector<T>::const_iterator Vec<T>::end() const {
+    return data.end();
 }
 
 #endif
