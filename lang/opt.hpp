@@ -56,7 +56,7 @@ bool Optional<T>::is_none() {
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const Optional<T>& res) {
     os << "Optional(";
-    
+
     if (res.is_some()) {
         os << res.unwrap();
     } else {
@@ -66,6 +66,16 @@ std::ostream& operator<<(std::ostream& os, const Optional<T>& res) {
     os << ")";
     
     return os;
+}
+
+template <typename T>
+Optional<T> Some(T value) {
+    return Optional<T>(value);
+}
+
+template <typename T>
+Optional<T> None() {
+    return Optional<T>();
 }
 
 #endif
