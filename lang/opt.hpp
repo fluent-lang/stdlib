@@ -21,7 +21,7 @@
 template <typename T>
 class Optional {
     private:
-        value: std::optional<T>;
+        std::optional<T> value;
     public:
         Optional(T value);
         T&& unwrap();
