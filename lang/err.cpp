@@ -14,15 +14,15 @@
 #include "err.hpp"
 
 #include <iostream>
-#include <string>
+#include "../lang/string.hpp"
 
-GenericErr::GenericErr(std::string message) : message(std::move(message)) {}
+GenericErr::GenericErr(String message) : message(std::move(message)) {}
 
-std::string GenericErr::get_message() const {
+String GenericErr::get_message() const {
     return message;
 }
 
 std::ostream& operator<<(std::ostream& os, const GenericErr& err) {
-    os << "Err(" << err.get_message() << ")";
+    os << "Err(" << err.get_message().to_data() << ")";
     return os;
 }
