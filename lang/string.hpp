@@ -26,7 +26,7 @@ class String {
     public:
         String(const char* data);
 
-        const char* to_data() const;
+        const char* to_str() const;
         void push_raw(const char* additional_data);
         void push_string(String another_string);
         void clear();

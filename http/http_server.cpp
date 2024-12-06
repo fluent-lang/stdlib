@@ -97,7 +97,7 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
         string body;
         if (headers.find("Content-Length") != headers.end()) {
-            int content_length = stoi(headers["Content-Length"].to_data());
+            int content_length = stoi(headers["Content-Length"].to_str());
             body.resize(content_length);
             request_stream.read(&body[0], content_length);
         }
@@ -105,7 +105,7 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
         MessageEncoding message_encoding = MessageEncoding::TEXT;
 
         if (headers.find("Content-Type") != headers.end()) {
-            if (string(headers["Content-Type"].to_data()) == string("application/json")) {
+            if (string(headers["Content-Type"].to_str()) == string("application/json")) {
                 message_encoding = MessageEncoding::JSON;
             }
         }
@@ -126,13 +126,13 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
         string response_str = "HTTP/1.1 ";
 
         response_str += to_string(response.get_status_code()) + " " + 
-            response.get_status_detail().to_data() + "\n";
+            response.get_status_detail().to_str() + "\n";
 
         for (auto const& [key, val] : response.get_headers()) {
-            response_str += string(key.to_data()) + ": " + val.to_data() + "\n";
+            response_str += string(key.to_str()) + ": " + val.to_str() + "\n";
         }
 
-        response_str += "\n" + string(response.get_message().to_data());
+        response_str += "\n" + string(response.get_message().to_str());
 
         send(new_socket, response_str.c_str(), response_str.size(), 0);
 

@@ -37,7 +37,7 @@ public:
 
     const T& unwrap() const {
         if (has_error()) {
-            panic(error.unwrap().get_message().to_data());
+            panic(error.unwrap().get_message().to_str());
         }
         return value;
     }
@@ -68,7 +68,7 @@ template <typename T, typename E>
 std::ostream& operator<<(std::ostream& os, const Result<T, E>& res) {
     os << "Result(";
     if (res.has_error()) {
-        os << "None, Err(" << res.get_error().get_message().to_data() << "))";
+        os << "None, Err(" << res.get_error().get_message().to_str() << "))";
     } else {
         os << "Some(" << res.unwrap() << "), None)";
     }

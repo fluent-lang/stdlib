@@ -177,7 +177,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
     while (!queue.is_empty()) {
         // Get always the first element
         String current_path = queue.at(0).unwrap();
-        Result<bool> is_dir_result = is_dir(current_path.to_data());
+        Result<bool> is_dir_result = is_dir(current_path.to_str());
 
         // Cannot read the directory -> Return the error without crashing
         if (is_dir_result.has_error()) {
@@ -186,7 +186,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
 
         if (is_dir_result.unwrap()) {
             // See if the directory is empty
-            Result<Vec<String>> files = walk_dir(current_path.to_data());
+            Result<Vec<String>> files = walk_dir(current_path.to_str());
 
             // Cannot read the directory -> Return the error without crashing
             if (files.has_error()) {
@@ -197,7 +197,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
 
             // If the directory is empty, remove it
             if (files_vec.length() == 2) {
-                if (rmdir(current_path.to_data()) != 0) {
+                if (rmdir(current_path.to_str()) != 0) {
                     return Result<bool, GenericErr>(false, Some<GenericErr>(GenericErr("Failed to delete directory")));
                 }
             } else {
@@ -217,7 +217,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
             }
         } else {
             // Try to remove the file
-            Result<bool, GenericErr> delete_result = delete_file(current_path.to_data());
+            Result<bool, GenericErr> delete_result = delete_file(current_path.to_str());
 
             // Cannot delete the file -> Return the error without crashing
             if (delete_result.has_error()) {

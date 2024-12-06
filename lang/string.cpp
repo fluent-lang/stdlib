@@ -17,7 +17,7 @@ String::String(const char* str) {
     data = std::string(str);
 }
 
-const char* String::to_data() const {
+const char* String::to_str() const {
     return data.c_str();
 }
 
@@ -26,7 +26,7 @@ void String::push_raw(const char* additional_data) {
 }
 
 void String::push_string(String another_string) {
-    data += another_string.to_data();
+    data += another_string.to_str();
 }
 
 void String::clear() {
@@ -187,17 +187,17 @@ bool String::compare_raw(const char* str) const {
 }
 
 bool String::compare_string(String another_string) const {
-    return data.compare(another_string.to_data()) == 0;
+    return data.compare(another_string.to_str()) == 0;
 }
 
 String String::join(String other_str) {
-    return String((data + other_str.to_data()).c_str());
+    return String((data + other_str.to_str()).c_str());
 }
 
 std::ostream& operator<<(std::ostream& os, const String& res) {
     os << "String(";
     os << "\"";
-    os << res.to_data();
+    os << res.to_str();
     os << "\"";
     os << ")";
 

@@ -23,6 +23,6 @@ String GenericErr::get_message() const {
 }
 
 std::ostream& operator<<(std::ostream& os, const GenericErr& err) {
-    os << "Err(" << err.get_message().to_data() << ")";
+    os << "Err(" << err.get_message().to_str() << ")";
     return os;
 }
