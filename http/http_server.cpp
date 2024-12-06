@@ -23,6 +23,7 @@
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
 #include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 #include <arpa/inet.h>
 #include <optional>
 #include <string>
@@ -37,7 +38,7 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
     // Create socket
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Socket creation failed")));
+        return Result(false, Some<GenericErr>(GenericErr("Socket creation failed")));
     }
 
     // Setup server address
@@ -47,12 +48,12 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
     // Bind socket
     if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Bind failed")));
+        return Result(false, Some<GenericErr>(GenericErr("Bind failed")));
     }
 
     // Listen for connections
     if (listen(server_fd, 3) < 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Listen failed")));
+        return Result(false, Some<GenericErr>(GenericErr("Listen failed")));
     }
 
     // Accept connections
@@ -139,5 +140,5 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
         close(new_socket);
     }
 
-    return Result<bool, GenericErr>(true, nullopt);
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 }
