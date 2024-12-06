@@ -17,6 +17,7 @@
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
 #include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 
 using namespace std;
 
@@ -26,20 +27,20 @@ Result<String, GenericErr> get_env(const char* key) {
     if (value == NULL) {
         return Result(
             String(""), 
-            optional<GenericErr>(GenericErr("Environment variable not found"))
+            Some<GenericErr>(GenericErr("Environment variable not found"))
         );
     }
 
-    return Result<String, GenericErr>(String(value), nullopt);
+    return Result<String, GenericErr>(String(value), None<GenericErr>());
 }
 
 Result<bool, GenericErr> set_env(const char* key, const char* value) {
     if (setenv(key, value, 1) != 0) {
         return Result(
             false, 
-            optional<GenericErr>(GenericErr("Failed to set environment variable"))
+            Some<GenericErr>(GenericErr("Failed to set environment variable"))
         );
     }
 
-    return Result<bool, GenericErr>(true, nullopt);
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 }
