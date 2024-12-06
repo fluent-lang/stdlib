@@ -56,6 +56,10 @@ class String {
         String insert_prefix(const char* prefix);
         String insert_suffix(const char* suffix);
         Vec<String> split(const char* delimiter);
+        bool compare_raw(const char* str) const;
+        bool compare_string(String another_string) const;
+        // Makes a new string joining the current string with another string
+        String join(String other_str);
 };
 
 String::String(const char* str) {
@@ -225,6 +229,18 @@ Vec<String> String::split(const char* delimiter) {
     
     splitted_data.push(String(data_copy.c_str()));
     return splitted_data;
+}
+
+bool String::compare_raw(const char* str) const {
+    return data.compare(str) == 0;
+}
+
+bool String::compare_string(String another_string) const {
+    return data.compare(another_string.to_data()) == 0;
+}
+
+String String::join(String other_str) {
+    return String((data + other_str.to_data()).c_str());
 }
 
 std::ostream& operator<<(std::ostream& os, const String& res) {
