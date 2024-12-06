@@ -15,6 +15,7 @@
 #define RESULT_H
 
 #include "err.hpp"
+#include "opt.hpp"
 #include "panic.h"
 #include <optional>
 #include <utility>
@@ -24,11 +25,11 @@ template <typename T, typename E = GenericErr>
 class Result {
 private:
     T value;
-    std::optional<E> error;
+    Optional<E> error;
 
 public:
     // Constructor
-    Result(T&& value, std::optional<E> error = std::nullopt)
+    Result(T&& value, Optional<E> error = None())
         : value(std::move(value)), error(error) {}
 
     // Methods
