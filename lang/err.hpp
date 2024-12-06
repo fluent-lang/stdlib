@@ -22,7 +22,7 @@ class GenericErr {
         String message;
 
     public:
-        GenericErr(String message);
+        GenericErr(const char* message);
         String get_message() const;
 };
 

@@ -16,7 +16,7 @@
 #include <iostream>
 #include "../lang/string.hpp"
 
-GenericErr::GenericErr(String message) : message(std::move(message)) {}
+GenericErr::GenericErr(const char* message) : message(message) {}
 
 String GenericErr::get_message() const {
     return message;
