@@ -15,9 +15,9 @@
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
 #include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 #include <iostream>
 #include <string>
-#include <optional>
 
 using namespace std;
 
@@ -26,9 +26,9 @@ Result<String, GenericErr> read_line() {
         string line;
 
         getline(cin, line);
-        return Result<String, GenericErr>(move(String(line.c_str())), nullopt);
+        return Result<String, GenericErr>(move(String(line.c_str())), None<GenericErr>());
     } catch(const exception& e) {
-        return Result<String, GenericErr>(String(""), optional<GenericErr>(GenericErr(e.what())));
+        return Result<String, GenericErr>(String(""), Optional<GenericErr>(GenericErr(e.what())));
     }
     
 }

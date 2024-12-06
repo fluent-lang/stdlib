@@ -19,11 +19,11 @@
 #include <unistd.h>
 #include <vector>
 #include <dirent.h>
-#include <optional>
 #include <filesystem>
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
 #include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 
 using namespace std;
 
@@ -31,7 +31,7 @@ Result<bool, GenericErr> write_file(const char* path, const char* content) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
+        return Result(false, Optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Open the file
@@ -40,7 +40,7 @@ Result<bool, GenericErr> write_file(const char* path, const char* content) {
 
     // Something went wrong
     if (!file.is_open()) {
-        return Result(false, optional<GenericErr>(GenericErr("Failed to create file")));
+        return Result(false, Optional<GenericErr>(GenericErr("Failed to create file")));
     }
 
     // Directly write the content to the file
@@ -49,7 +49,7 @@ Result<bool, GenericErr> write_file(const char* path, const char* content) {
     // Don't forget to close the file!
     file.close();
 
-    return Result<bool, GenericErr>(true, nullopt);
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 
 }
 
@@ -57,7 +57,7 @@ Result<String, GenericErr> read_file(const char* path) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(String(""), optional<GenericErr>(GenericErr("File does not exist")));
+        return Result(String(""), Optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Open the file
@@ -65,7 +65,7 @@ Result<String, GenericErr> read_file(const char* path) {
     file.open(path);
 
     if (!file.is_open()) {
-        return Result<String>(String(""), optional<GenericErr>(GenericErr("Failed to open file")));
+        return Result<String>(String(""), Optional<GenericErr>(GenericErr("Failed to open file")));
     }
 
     string content;
@@ -79,22 +79,22 @@ Result<String, GenericErr> read_file(const char* path) {
     // Don't forget to close the file!
     file.close();
 
-    return Result<String, GenericErr>(String(content.c_str()), nullopt);
+    return Result<String, GenericErr>(String(content.c_str()), None<GenericErr>());
 }
 
 Result<bool, GenericErr> delete_file(const char* path) {
     
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
+        return Result(false, Optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Remove the file
     if (remove(path) != 0) {
-        return Result(false, optional<GenericErr>(GenericErr("Failed to delete file")));
+        return Result(false, Optional<GenericErr>(GenericErr("Failed to delete file")));
     }
 
-    return Result<bool, GenericErr>(true, nullopt);
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 
 }
 
@@ -102,14 +102,14 @@ Result<Vec<String>, GenericErr> walk_dir(const char* path) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(Vec<String>(), optional<GenericErr>(GenericErr("File does not exist")));
+        return Result(Vec<String>(), Optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Check if it's a directory
     if (!is_dir(path).unwrap()) {
         return Result(
             Vec<String>(),
-            optional<GenericErr>(GenericErr("Path is not a directory"))
+            Optional<GenericErr>(GenericErr("Path is not a directory"))
         );
     }
 
@@ -119,7 +119,7 @@ Result<Vec<String>, GenericErr> walk_dir(const char* path) {
     if (dir == NULL) {
         return Result(
             Vec<String>(),
-            optional<GenericErr>(GenericErr("Failed to open directory"))
+            Optional<GenericErr>(GenericErr("Failed to open directory"))
         );
     }
 
@@ -134,7 +134,7 @@ Result<Vec<String>, GenericErr> walk_dir(const char* path) {
     // Close the directory
     closedir(dir);
 
-    return Result<Vec<String>, GenericErr>(move(files), nullopt);
+    return Result<Vec<String>, GenericErr>(move(files), None<GenericErr>());
 
 }
 
@@ -142,10 +142,10 @@ Result<bool, GenericErr> file_exists(const char* path) {
 
     // Check if the file exists
     if (filesystem::exists(path)) {
-        return Result<bool, GenericErr>(true, nullopt);
+        return Result<bool, GenericErr>(true, None<GenericErr>());
     }
 
-    return Result<bool, GenericErr>(false, nullopt);
+    return Result<bool, GenericErr>(false, None<GenericErr>());
 
 }
 
@@ -153,15 +153,15 @@ Result<bool, GenericErr> is_dir(const char* path) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
+        return Result(false, Optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Check if the path is a directory
     if (filesystem::is_directory(path)) {
-        return Result<bool, GenericErr>(true, nullopt);
+        return Result<bool, GenericErr>(true, None<GenericErr>());
     }
 
-    return Result<bool, GenericErr>(false, nullopt);
+    return Result<bool, GenericErr>(false, None<GenericErr>());
 
 }   
 
@@ -181,7 +181,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
 
         // Cannot read the directory -> Return the error without crashing
         if (is_dir_result.has_error()) {
-            return Result<bool, GenericErr>(false, optional<GenericErr>(is_dir_result.get_error()));
+            return Result<bool, GenericErr>(false, Optional<GenericErr>(is_dir_result.get_error()));
         }
 
         if (is_dir_result.unwrap()) {
@@ -190,7 +190,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
 
             // Cannot read the directory -> Return the error without crashing
             if (files.has_error()) {
-                return Result<bool, GenericErr>(false, optional<GenericErr>(files.get_error()));
+                return Result<bool, GenericErr>(false, Optional<GenericErr>(files.get_error()));
             }
 
             Vec<String> files_vec = files.unwrap();
@@ -198,7 +198,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
             // If the directory is empty, remove it
             if (files_vec.length() == 2) {
                 if (rmdir(current_path.to_data()) != 0) {
-                    return Result<bool, GenericErr>(false, optional<GenericErr>(GenericErr("Failed to delete directory")));
+                    return Result<bool, GenericErr>(false, Optional<GenericErr>(GenericErr("Failed to delete directory")));
                 }
             } else {
                 // Add all the files to the queue
@@ -221,7 +221,7 @@ Result<bool, GenericErr> remove_dir(const char* path) {
 
             // Cannot delete the file -> Return the error without crashing
             if (delete_result.has_error()) {
-                return Result<bool, GenericErr>(false, optional<GenericErr>(delete_result.get_error()));
+                return Result<bool, GenericErr>(false, Optional<GenericErr>(delete_result.get_error()));
             }
         }
 
@@ -229,5 +229,5 @@ Result<bool, GenericErr> remove_dir(const char* path) {
         queue.shift(1);
     }
 
-    return Result<bool, GenericErr>(true, nullopt);
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 }
