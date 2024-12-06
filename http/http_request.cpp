@@ -12,16 +12,17 @@
 */
 
 #include "http_request.hpp"
+#include "../lang/string.hpp"
 
 using namespace std;
 
 HttpRequest::HttpRequest(
     MessageEncoding message_encoding,
-    string body,
-    string origin,
-    string path,
-    string method,
-    map<string, string> headers
+    String body,
+    String origin,
+    String path,
+    String method,
+    map<String, String> headers
 ) : 
     message_encoding(message_encoding),
     body(body),
@@ -34,22 +35,22 @@ MessageEncoding HttpRequest::get_message_encoding() {
     return message_encoding;
 }
 
-string HttpRequest::get_body() {
+String HttpRequest::get_body() {
     return body;
 }
 
-string HttpRequest::get_origin() {
+String HttpRequest::get_origin() {
     return origin;
 }
 
-string HttpRequest::get_path() {
+String HttpRequest::get_path() {
     return path;
 }
 
-string HttpRequest::get_method() {
+String HttpRequest::get_method() {
     return method;
 }
 
-map<string, string> HttpRequest::get_headers() {
+map<String, String> HttpRequest::get_headers() {
     return headers;
 }

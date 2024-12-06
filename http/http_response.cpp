@@ -13,14 +13,15 @@
 
 #include "http_response.hpp"
 #include <map>
+#include "message_encoding.h"
 
 using namespace std;
 
 HttpResponse::HttpResponse(
     MessageEncoding message_encoding,
-    string message,
-    string status_detail,
-    map<string, string> headers,
+    String message,
+    String status_detail,
+    map<String, String> headers,
     int status_code
 ) :
     message_encoding(message_encoding),
@@ -29,7 +30,7 @@ HttpResponse::HttpResponse(
     headers(headers),
     status_code(status_code) {}
 
-string HttpResponse::get_message() {
+String HttpResponse::get_message() {
     return message;
 }
 
@@ -41,10 +42,10 @@ int HttpResponse::get_status_code() {
     return status_code;
 }
 
-string HttpResponse::get_status_detail() {
+String HttpResponse::get_status_detail() {
     return status_detail;
 }
 
-map<string, string> HttpResponse::get_headers() {
+map<String, String> HttpResponse::get_headers() {
     return headers;
 }

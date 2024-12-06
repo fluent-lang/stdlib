@@ -5,7 +5,8 @@
 #include "http_request.hpp"
 #include "http_server.hpp"
 #include "../lang/result.hpp"
+#include "../lang/err.hpp"
 
-Result<bool> create_http_server(int port, HttpResponse (*callback)(HttpRequest));
+Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(HttpRequest));
 
 #endif

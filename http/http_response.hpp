@@ -14,32 +14,32 @@
 #ifndef HTTP_RESPONSE_H
 #define HTTP_RESPONSE_H
 
-#include <string>
 #include <map>
 #include "message_encoding.h"
+#include "../lang/string.hpp"
 
 class HttpResponse {
     private:
         MessageEncoding message_encoding;
-        std::string message;
-        std::string status_detail;
-        std::map<std::string, std::string> headers;
+        String message;
+        String status_detail;
+        std::map<String, String> headers;
         int status_code;
     
     public:
         HttpResponse(
             MessageEncoding message_encoding,
-            std::string message,
-            std::string status_detail,
-            std::map<std::string, std::string> headers,
+            String message,
+            String status_detail,
+            std::map<String, String> headers,
             int status_code
         );
 
-        std::string get_message();
+        String get_message();
         MessageEncoding get_message_encoding();
         int get_status_code();
-        std::string get_status_detail();
-        std::map<std::string, std::string> get_headers();
+        String get_status_detail();
+        std::map<String, String> get_headers();
 };
 
 #endif

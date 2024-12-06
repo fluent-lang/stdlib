@@ -14,7 +14,6 @@
 #include "http_server.hpp"
 
 #include <iostream>
-#include <string>
 #include <sstream>
 #include <unistd.h>
 #include <netinet/in.h>
@@ -23,8 +22,10 @@
 #include "http_request.hpp"
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
+#include "../lang/string.hpp"
 #include <arpa/inet.h>
 #include <optional>
+#include <string>
 
 using namespace std;
 
@@ -83,18 +84,19 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
         request_line >> method >> path >> version;
 
-        map<string, string> headers;
+        map<String, String> headers;
         while (getline(request_stream, line) && line != "\r") {
             istringstream header_line(line);
             string key, value;
             getline(header_line, key, ':');
             getline(header_line, value);
-            headers[key] = value;
+
+            headers[String(key.c_str())] = String(value.c_str());
         }
 
         string body;
         if (headers.find("Content-Length") != headers.end()) {
-            int content_length = stoi(headers["Content-Length"]);
+            int content_length = stoi(headers["Content-Length"].to_data());
             body.resize(content_length);
             request_stream.read(&body[0], content_length);
         }
@@ -102,7 +104,7 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
         MessageEncoding message_encoding = MessageEncoding::TEXT;
 
         if (headers.find("Content-Type") != headers.end()) {
-            if (headers["Content-Type"] == "application/json") {
+            if (string(headers["Content-Type"].to_data()) == string("application/json")) {
                 message_encoding = MessageEncoding::JSON;
             }
         }
@@ -110,10 +112,10 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
         // Create a new HttpRequest to send the callback
         HttpRequest request(
             message_encoding,
-            body,
-            client_ip,
-            path,
-            method,
+            String(body.c_str()),
+            String(client_ip),
+            String(path.c_str()),
+            String(method.c_str()),
             headers
         );
 
@@ -122,13 +124,14 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
 
         string response_str = "HTTP/1.1 ";
 
-        response_str += to_string(response.get_status_code()) + " " + response.get_status_detail() + "\n";
+        response_str += to_string(response.get_status_code()) + " " + 
+            response.get_status_detail().to_data() + "\n";
 
         for (auto const& [key, val] : response.get_headers()) {
-            response_str += key + ": " + val + "\n";
+            response_str += string(key.to_data()) + ": " + val.to_data() + "\n";
         }
 
-        response_str += "\n" + response.get_message();
+        response_str += "\n" + string(response.get_message().to_data());
 
         send(new_socket, response_str.c_str(), response_str.size(), 0);
 
