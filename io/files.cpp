@@ -29,7 +29,7 @@ using namespace std;
 Result<bool, GenericErr> write_file(const string* path, const string* content) {
 
     // First check if the file exists
-    if (!file_exists(path).unwrap(f, l)) {
+    if (!file_exists(path).unwrap()) {
         return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
     }
 
@@ -55,7 +55,7 @@ Result<bool, GenericErr> write_file(const string* path, const string* content) {
 Result<string, GenericErr> read_file(const string* path) {
 
     // First check if the file exists
-    if (!file_exists(path).unwrap(f, l)) {
+    if (!file_exists(path).unwrap()) {
         return Result(string(""), optional<GenericErr>(GenericErr("File does not exist")));
     }
 
@@ -71,7 +71,7 @@ Result<string, GenericErr> read_file(const string* path) {
     string line;
 
     // Read line by line
-    while (getline()) {
+    while (getline(file, line)) {
         content += line + "\n";
     }
 
@@ -84,7 +84,7 @@ Result<string, GenericErr> read_file(const string* path) {
 Result<bool, GenericErr> delete_file(const string* path) {
     
     // First check if the file exists
-    if (!file_exists(path).unwrap(f, l)) {
+    if (!file_exists(path).unwrap()) {
         return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
     }
 
@@ -100,12 +100,12 @@ Result<bool, GenericErr> delete_file(const string* path) {
 Result<vector<string>, GenericErr> walk_dir(const string* path) {
 
     // First check if the file exists
-    if (!file_exists(path).unwrap(f, l)) {
+    if (!file_exists(path).unwrap()) {
         return Result(vector<string>(), optional<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Check if it's a directory
-    if (!is_dir(path).unwrap(f, l)) {
+    if (!is_dir(path).unwrap()) {
         return Result(
             vector<string>(),
             optional<GenericErr>(GenericErr("Path is not a directory"))
@@ -151,7 +151,7 @@ Result<bool, GenericErr> file_exists(const string* path) {
 Result<bool, GenericErr> is_dir(const string* path) {
 
     // First check if the file exists
-    if (!file_exists(path).unwrap(f, l)) {
+    if (!file_exists(path).unwrap()) {
         return Result(false, optional<GenericErr>(GenericErr("File does not exist")));
     }
 
@@ -179,19 +179,19 @@ Result<bool, GenericErr> remove_dir(const string* path) {
 
         // Cannot read the directory -> Return the error without crashing
         if (is_dir_result.has_error()) {
-            return Result<bool, GenericErr>(false, optional<GenericErr>(is_dir_result.get_error(f, l)));
+            return Result<bool, GenericErr>(false, optional<GenericErr>(is_dir_result.get_error()));
         }
 
-        if (is_dir_result.unwrap(f, l)) {
+        if (is_dir_result.unwrap()) {
             // See if the directory is empty
             Result<vector<string>> files = walk_dir(current_path);
 
             // Cannot read the directory -> Return the error without crashing
             if (files.has_error()) {
-                return Result<bool, GenericErr>(false, optional<GenericErr>(files.get_error(f, l)));
+                return Result<bool, GenericErr>(false, optional<GenericErr>(files.get_error()));
             }
 
-            vector<string> files_vec = files.unwrap(f, l);
+            vector<string> files_vec = files.unwrap();
 
             // If the directory is empty, remove it
             if (files_vec.size() == 2) {
@@ -216,7 +216,7 @@ Result<bool, GenericErr> remove_dir(const string* path) {
 
             // Cannot delete the file -> Return the error without crashing
             if (delete_result.has_error()) {
-                return Result<bool, GenericErr>(false, optional<GenericErr>(delete_result.get_error(f, l)));
+                return Result<bool, GenericErr>(false, optional<GenericErr>(delete_result.get_error()));
             }
         }
 
