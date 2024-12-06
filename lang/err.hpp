@@ -14,16 +14,16 @@
 #ifndef ERR_H
 #define ERR_H
 
-#include <string>
 #include <iostream>
+#include "../lang/string.hpp"
 
 class GenericErr {
     private:
-        std::string message;
+        String message;
 
     public:
-        GenericErr(std::string message);
-        std::string get_message() const;
+        GenericErr(const char* message);
+        String get_message() const;
 };
 
 std::ostream& operator<<(std::ostream& os, const GenericErr& err);

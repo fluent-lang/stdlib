@@ -11,26 +11,28 @@
     Copyright (c) 2024 Rodrigo R. & all Surf contributors
 */
 
-#include "join.h"
+#include "join.hpp"
 
 #include <string>
 
-std::string get_path_separator() {
+String get_path_separator() {
     #ifdef _WIN32
-        return "\\";
+        return String("\\");
     #else
-        return "/";
+        return String("/");
     #endif
 }
 
-std::string join_path(const std::string* path1, const std::string* path2) {
-    std::string path = *path1;
+String join_path(const char* path1, const char* path2) {
+    String path = String(path1);
+    String separator = get_path_separator();
+    int length = strnlen(path1, sizeof(path) - 1);
 
-    if (path[path.length() - 1] != '/') {
-        path += "/";
+    if (path.at(length - 1) != separator.at(0)) {
+        path.push_string(separator);
     }
 
-    path += *path2;
+    path.push_raw(path2);
 
     return path;
 }

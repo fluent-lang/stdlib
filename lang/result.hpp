@@ -15,27 +15,29 @@
 #define RESULT_H
 
 #include "err.hpp"
+#include "opt.hpp"
 #include "panic.h"
 #include <optional>
 #include <utility>
+#include <iostream>
 
 template <typename T, typename E = GenericErr>
 class Result {
 private:
     T value;
-    std::optional<E> error;
+    Optional<E> error;
 
 public:
     // Constructor
-    Result(T&& value, std::optional<E> error = std::nullopt)
+    Result(T&& value, Optional<E> error = None<E>())
         : value(std::move(value)), error(error) {}
 
     // Methods
-    bool has_error() const { return error.has_value(); }
+    bool has_error() const { return error.is_some(); }
 
     const T& unwrap() const {
         if (has_error()) {
-            panic(error.value().get_message().c_str());
+            panic(error.unwrap().get_message().to_str());
         }
         return value;
     }
@@ -48,7 +50,7 @@ public:
         if (!has_error()) {
             panic("Attempted to get error from a successful Result");
         }
-        return error.value();
+        return error.unwrap();
     }
 };
 
@@ -62,13 +64,11 @@ Result<T, E> Err(E&& value) {
     return Result<T, E>(T{}, std::optional<E>(std::forward<E>(value)));
 }
 
-#include <iostream>
-
 template <typename T, typename E>
 std::ostream& operator<<(std::ostream& os, const Result<T, E>& res) {
     os << "Result(";
     if (res.has_error()) {
-        os << "None, Err(" << res.get_error() << "))";
+        os << "None, Err(" << res.get_error().get_message().to_str() << "))";
     } else {
         os << "Some(" << res.unwrap() << "), None)";
     }

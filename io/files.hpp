@@ -18,12 +18,14 @@
 #include <string>
 #include <vector>
 #include "../lang/result.hpp"
-#include "../lang/err.h"
+#include "../lang/err.hpp"
+#include "../lang/string.hpp"
+#include "../lang/vec.hpp"
 
-Result<bool> write_file(const std::string* path, const std::string* content);
-Result<std::string> read_file(const std::string* path);
-Result<bool> delete_file(const std::string* path);
-Result<std::vector<std::string>> delete_dir(const std::string* path);
-Result<std::vector<std::string>> walk_dir(const std::string* path);
+Result<bool, GenericErr> write_file(const char* path, const char* content);
+Result<String, GenericErr> read_file(const char* path);
+Result<bool, GenericErr> delete_file(const char* path);
+Result<bool, GenericErr> remove_dir(const char* path);
+Result<Vec<String>, GenericErr> walk_dir(const char* path);
 
 #endif

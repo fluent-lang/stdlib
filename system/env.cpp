@@ -16,27 +16,31 @@
 #include <string>
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
+#include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 
-Result<std::string> get_env(const std::string* key) {
-    char* value = getenv(key->c_str());
+using namespace std;
+
+Result<String, GenericErr> get_env(const char* key) {
+    char* value = getenv(key);
 
     if (value == NULL) {
         return Result(
-            std::string(""), 
-            std::optional<Err>(Err("Environment variable not found"))
+            String(""), 
+            Some<GenericErr>(GenericErr("Environment variable not found"))
         );
     }
 
-    return Result(std::string(value), std::optional<Err>());
+    return Result<String, GenericErr>(String(value), None<GenericErr>());
 }
 
-Result<bool> set_env(const std::string* key, const std::string* value) {
-    if (setenv(key->c_str(), value->c_str(), 1) != 0) {
+Result<bool, GenericErr> set_env(const char* key, const char* value) {
+    if (setenv(key, value, 1) != 0) {
         return Result(
             false, 
-            std::optional<Err>(Err("Failed to set environment variable"))
+            Some<GenericErr>(GenericErr("Failed to set environment variable"))
         );
     }
 
-    return Result(true, std::optional<Err>());
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 }

@@ -14,35 +14,35 @@
 #ifndef HTTP_REQUEST_H
 #define HTTP_REQUEST_H
 
-#include <string>
+#include "../lang/string.hpp"
 #include <map>
 #include "message_encoding.h"
 
 class HttpRequest {
     private:
         MessageEncoding message_encoding;
-        std::string body;
-        std::string origin;
-        std::string path;
-        std::string method;
-        std::map<std::string, std::string> headers;
+        String body;
+        String origin;
+        String path;
+        String method;
+        std::map<String, String> headers;
 
     public:
         HttpRequest(
             MessageEncoding message_encoding,
-            std::string body,
-            std::string origin,
-            std::string path,
-            std::string method,
-            std::map<std::string, std::string> headers
+            String body,
+            String origin,
+            String path,
+            String method,
+            std::map<String, String> headers
         );
 
         MessageEncoding get_message_encoding();
-        std::string get_body();
-        std::string get_origin();
-        std::string get_path();
-        std::string get_method();
-        std::map<std::string, std::string> get_headers();
+        String get_body();
+        String get_origin();
+        String get_path();
+        String get_method();
+        std::map<String, String> get_headers();
 };
 
 #endif

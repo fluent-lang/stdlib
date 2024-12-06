@@ -22,21 +22,25 @@
 #include <filesystem>
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
+#include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 
-Result<bool> write_file(const std::string* path, const std::string* content) {
+using namespace std;
+
+Result<bool, GenericErr> write_file(const char* path, const char* content) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(false, optional<Err>(Err("File does not exist")));
+        return Result(false, Some<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Open the file
-    std::ofstream file;
-    file.open(*path);
+    ofstream file;
+    file.open(path);
 
     // Something went wrong
     if (!file.is_open()) {
-        return Result(false, optional<Err>(Err("Failed to create file")));
+        return Result(false, Some<GenericErr>(GenericErr("Failed to create file")));
     }
 
     // Directly write the content to the file
@@ -45,182 +49,185 @@ Result<bool> write_file(const std::string* path, const std::string* content) {
     // Don't forget to close the file!
     file.close();
 
-    return Result(true, optional<Err>());
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 
 }
 
-Result<std::string> read_file(const std::string* path) {
+Result<String, GenericErr> read_file(const char* path) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(std::string(""), optional<Err>(Err("File does not exist")));
+        return Result(String(""), Some<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Open the file
-    std::ifstream file;
-    file.open(*path);
+    ifstream file;
+    file.open(path);
 
     if (!file.is_open()) {
-        return Result<std::string>("", optional<Err>(Err("Failed to open file")));
+        return Result<String>(String(""), Some<GenericErr>(GenericErr("Failed to open file")));
     }
 
-    std::string content;
-    std::string line;
+    string content;
+    string line;
 
     // Read line by line
-    while (std::getline(file, line)) {
+    while (getline(file, line)) {
         content += line + "\n";
     }
 
     // Don't forget to close the file!
     file.close();
 
-    return Result<std::string>(content, optional<Err>());
-
+    return Result<String, GenericErr>(String(content.c_str()), None<GenericErr>());
 }
 
-Result<bool> delete_file(const std::string* path) {
+Result<bool, GenericErr> delete_file(const char* path) {
     
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(false, optional<Err>(Err("File does not exist")));
+        return Result(false, Some<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Remove the file
-    if (remove(path->c_str()) != 0) {
-        return Result(false, optional<Err>(Err("Failed to delete file")));
+    if (remove(path) != 0) {
+        return Result(false, Some<GenericErr>(GenericErr("Failed to delete file")));
     }
 
-    return Result(true, optional<Err>());
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 
 }
 
-Result<std::vector<std::string>> walk_dir(const std::string* path) {
+Result<Vec<String>, GenericErr> walk_dir(const char* path) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(std::vector<std::string>(), optional<Err>(Err("File does not exist")));
+        return Result(Vec<String>(), Some<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Check if it's a directory
     if (!is_dir(path).unwrap()) {
         return Result(
-            std::vector<std::string>(),
-            optional<Err>(Err("Path is not a directory"))
+            Vec<String>(),
+            Some<GenericErr>(GenericErr("Path is not a directory"))
         );
     }
 
     // Open the directory
-    DIR* dir = opendir(path->c_str());
+    DIR* dir = opendir(path);
 
     if (dir == NULL) {
         return Result(
-            std::vector<std::string>(),
-            optional<Err>(Err("Failed to open directory"))
+            Vec<String>(),
+            Some<GenericErr>(GenericErr("Failed to open directory"))
         );
     }
 
-    std::vector<std::string> files;
+    Vec<String> files;
 
     // Read the directory
     struct dirent* entry;
     while ((entry = readdir(dir)) != NULL) {
-        files.push_back(entry->d_name);
+        files.push(entry->d_name);
     }
 
     // Close the directory
     closedir(dir);
 
-    return Result(files, optional<Err>());
+    return Result<Vec<String>, GenericErr>(move(files), None<GenericErr>());
 
 }
 
-Result<bool> file_exists(const std::string* path) {
+Result<bool, GenericErr> file_exists(const char* path) {
 
     // Check if the file exists
-    if (std::filesystem::exists(*path)) {
-        return Result(true, optional<Err>());
+    if (filesystem::exists(path)) {
+        return Result<bool, GenericErr>(true, None<GenericErr>());
     }
 
-    return Result(false, optional<Err>());
+    return Result<bool, GenericErr>(false, None<GenericErr>());
 
 }
 
-Result<bool> is_dir(const std::string* path) {
+Result<bool, GenericErr> is_dir(const char* path) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
-        return Result(false, optional<Err>(Err("File does not exist")));
+        return Result(false, Some<GenericErr>(GenericErr("File does not exist")));
     }
 
     // Check if the path is a directory
-    if (std::filesystem::is_directory(*path)) {
-        return Result(true, optional<Err>());
+    if (filesystem::is_directory(path)) {
+        return Result<bool, GenericErr>(true, None<GenericErr>());
     }
 
-    return Result(false, optional<Err>());
+    return Result<bool, GenericErr>(false, None<GenericErr>());
 
-}
+}   
 
-Result<bool> delete_dir(const std::string* path) {
+Result<bool, GenericErr> remove_dir(const char* path) {
 
     // Remember that rmdir from unistd.h only works for empty directories
     // To fix that while still maintaning performance, we can use a queue
     // which has a complexity of O(n) instead of O(n^2) from the recursive approach
 
-    std::vector<std::string> queue = { *path };
+    Vec<String> queue = Vec<String>();
+    queue.push(path);
 
-    while (!queue.empty()) {
+    while (!queue.is_empty()) {
         // Get always the first element
-        std::string* current_path = &queue[0];
-        Result<bool> is_dir_result = is_dir(current_path);
+        String current_path = queue.at(0).unwrap();
+        Result<bool> is_dir_result = is_dir(current_path.to_str());
 
         // Cannot read the directory -> Return the error without crashing
         if (is_dir_result.has_error()) {
-            return Result(false, optional<Err>(is_dir_result.get_error()));
+            return Result<bool, GenericErr>(false, Some<GenericErr>(is_dir_result.get_error()));
         }
 
         if (is_dir_result.unwrap()) {
             // See if the directory is empty
-            Result<std::vector<std::string>> files = walk_dir(current_path);
+            Result<Vec<String>> files = walk_dir(current_path.to_str());
 
             // Cannot read the directory -> Return the error without crashing
             if (files.has_error()) {
-                return Result(false, optional<Err>(files.get_error()));
+                return Result<bool, GenericErr>(false, Some<GenericErr>(files.get_error()));
             }
 
-            std::vector<std::string>* files_vec = files.unwrap();
+            Vec<String> files_vec = files.unwrap();
 
             // If the directory is empty, remove it
-            if (files_vec->size() == 2) {
-                if (rmdir(current_path->c_str()) != 0) {
-                    return Result(false, optional<Err>(Err("Failed to delete directory")));
+            if (files_vec.length() == 2) {
+                if (rmdir(current_path.to_str()) != 0) {
+                    return Result<bool, GenericErr>(false, Some<GenericErr>(GenericErr("Failed to delete directory")));
                 }
             } else {
                 // Add all the files to the queue
-                for (const std::string& file : *files_vec) {
-                    if (file != "." && file != "..") {
-                        queue.push_back(*current_path + "/" + file);
+                for (const String& file : files_vec) {
+                    if (file.compare_raw(".") && file.compare_raw("..")) {
+                        queue.push(
+                            current_path.join("/")
+                                .join(file)
+                        );
                     }
                 }
 
                 // Add the directory to the end of the queue
                 // After all files are deleted, the directory should be now empty
-                queue.push_back(*current_path);
+                queue.push(current_path);
             }
         } else {
             // Try to remove the file
-            Result<bool> delete_result = delete_file(current_path);
+            Result<bool, GenericErr> delete_result = delete_file(current_path.to_str());
 
             // Cannot delete the file -> Return the error without crashing
             if (delete_result.has_error()) {
-                return Result(false, optional<Err>(delete_result.get_error()));
+                return Result<bool, GenericErr>(false, Some<GenericErr>(delete_result.get_error()));
             }
         }
 
         // Pop the first element
-        queue.erase(queue.begin());
+        queue.shift(1);
     }
 
-    return Result(true, optional<Err>());
+    return Result<bool, GenericErr>(true, None<GenericErr>());
 }

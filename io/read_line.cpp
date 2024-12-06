@@ -14,18 +14,21 @@
 #include "read_line.hpp"
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
+#include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 #include <iostream>
 #include <string>
-#include <optional>
 
-Result<std::string> read_line() {
+using namespace std;
+
+Result<String, GenericErr> read_line() {
     try {
-        std::string line;
+        string line;
 
-        getline(std::cin, line);
-        return Result(line, std::optional<Err>());
-    } catch(const std::exception& e) {
-        return Result(std::string(""), std::optional<Err>(Err(e.what())));
+        getline(cin, line);
+        return Result<String, GenericErr>(move(String(line.c_str())), None<GenericErr>());
+    } catch(const exception& e) {
+        return Result<String, GenericErr>(String(""), Optional<GenericErr>(GenericErr(e.what())));
     }
     
 }
