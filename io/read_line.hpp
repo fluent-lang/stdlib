@@ -16,7 +16,8 @@
 #include <string>
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
+#include "../lang/string.hpp"
 
-Result<std::string, GenericErr> read_line();
+Result<String, GenericErr> read_line();
 
 #endif
