@@ -29,15 +29,15 @@ private:
 
 public:
     // Constructor
-    Result(T&& value, Optional<E> error = None())
+    Result(T&& value, Optional<E> error = None<E>())
         : value(std::move(value)), error(error) {}
 
     // Methods
-    bool has_error() const { return error.has_value(); }
+    bool has_error() const { return error.is_some(); }
 
     const T& unwrap() const {
         if (has_error()) {
-            panic(error.value().get_message().c_str());
+            panic(error.unwrap().get_message().to_data());
         }
         return value;
     }
@@ -50,7 +50,7 @@ public:
         if (!has_error()) {
             panic("Attempted to get error from a successful Result");
         }
-        return error.value();
+        return error.unwrap();
     }
 };
 
@@ -68,7 +68,7 @@ template <typename T, typename E>
 std::ostream& operator<<(std::ostream& os, const Result<T, E>& res) {
     os << "Result(";
     if (res.has_error()) {
-        os << "None, Err(" << res.get_error() << "))";
+        os << "None, Err(" << res.get_error().get_message().to_data() << "))";
     } else {
         os << "Some(" << res.unwrap() << "), None)";
     }
