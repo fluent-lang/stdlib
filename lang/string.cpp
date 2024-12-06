@@ -196,7 +196,9 @@ String String::join(String other_str) {
 
 std::ostream& operator<<(std::ostream& os, const String& res) {
     os << "String(";
+    os << "\"";
     os << res.to_data();
+    os << "\"";
     os << ")";
 
     return os;
