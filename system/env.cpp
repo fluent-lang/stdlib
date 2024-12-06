@@ -16,20 +16,21 @@
 #include <string>
 #include "../lang/result.hpp"
 #include "../lang/err.hpp"
+#include "../lang/string.hpp"
 
 using namespace std;
 
-Result<string, GenericErr> get_env(const char* key) {
+Result<String, GenericErr> get_env(const char* key) {
     char* value = getenv(key);
 
     if (value == NULL) {
         return Result(
-            string(""), 
+            String(""), 
             optional<GenericErr>(GenericErr("Environment variable not found"))
         );
     }
 
-    return Result<string, GenericErr>(string(value), nullopt);
+    return Result<String, GenericErr>(String(value), nullopt);
 }
 
 Result<bool, GenericErr> set_env(const char* key, const char* value) {
