@@ -23,10 +23,17 @@ class Optional {
     private:
         std::optional<T> value;
     public:
+        Optional() = default;
         Optional(T value);
-        T&& unwrap();
-        bool is_some();
-        bool is_none();
+        
+        // Non-const unwrap (for moving the value)
+        T&& unwrap() &&;
+
+        // Const unwrap (for accessing value in const context)
+        const T& unwrap() const&;
+
+        bool is_some() const;
+        bool is_none() const;
 };
 
 template <typename T>
@@ -34,8 +41,9 @@ Optional<T>::Optional(T value) {
     this->value = std::optional<T>(value);
 }
 
+// Non-const unwrap (for moving the value)
 template <typename T>
-T&& Optional<T>::unwrap() {
+T&& Optional<T>::unwrap() && {
     if (!this->value.has_value()) {
         panic("Called unwrap on an empty optional");
     }
@@ -43,13 +51,23 @@ T&& Optional<T>::unwrap() {
     return std::move(this->value.value());
 }
 
+// Const unwrap (for accessing value in const context)
 template <typename T>
-bool Optional<T>::is_some() {
+const T& Optional<T>::unwrap() const& {
+    if (!this->value.has_value()) {
+        panic("Called unwrap on an empty optional");
+    }
+
+    return this->value.value();
+}
+
+template <typename T>
+bool Optional<T>::is_some() const {
     return this->value.has_value();
 }
 
 template <typename T>
-bool Optional<T>::is_none() {
+bool Optional<T>::is_none() const {
     return !this->is_some();
 }
 
@@ -58,7 +76,7 @@ std::ostream& operator<<(std::ostream& os, const Optional<T>& res) {
     os << "Optional(";
 
     if (res.is_some()) {
-        os << res.unwrap();
+        os << res.unwrap();  // This should work now for const objects
     } else {
         os << "None";
     }
