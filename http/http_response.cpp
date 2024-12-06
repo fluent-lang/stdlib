@@ -19,14 +19,14 @@ using namespace std;
 
 HttpResponse::HttpResponse(
     MessageEncoding message_encoding,
-    String message,
-    String status_detail,
+    const char* message,
+    const char* status_detail,
     map<String, String> headers,
     int status_code
 ) :
     message_encoding(message_encoding),
-    message(message),
-    status_detail(status_detail),
+    message(String(message)),
+    status_detail(String(status_detail)),
     headers(headers),
     status_code(status_code) {}
 

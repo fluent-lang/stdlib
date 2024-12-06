@@ -29,8 +29,8 @@ class HttpResponse {
     public:
         HttpResponse(
             MessageEncoding message_encoding,
-            String message,
-            String status_detail,
+            const char* message,
+            const char* status_detail,
             std::map<String, String> headers,
             int status_code
         );
