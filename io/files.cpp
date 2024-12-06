@@ -27,7 +27,7 @@
 
 using namespace std;
 
-Result<bool, GenericErr> write_file(const char* path, String content) {
+Result<bool, GenericErr> write_file(const char* path, const char* content) {
 
     // First check if the file exists
     if (!file_exists(path).unwrap()) {
@@ -44,7 +44,7 @@ Result<bool, GenericErr> write_file(const char* path, String content) {
     }
 
     // Directly write the content to the file
-    file << content.to_data();
+    file << content;
 
     // Don't forget to close the file!
     file.close();
