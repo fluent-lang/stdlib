@@ -14,9 +14,9 @@
 #ifndef JOIN_PATH_H
 #define JOIN_PATH_H
 
-#include <string>
+#include "../lang/string.hpp"
 
-std::string get_path_separator();
-std::string join_path(const std::string* path1, const std::string* path2);
+String get_path_separator();
+String join_path(const char* path1, const char* path2);
 
 #endif
