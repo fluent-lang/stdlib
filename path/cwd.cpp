@@ -18,6 +18,7 @@
 #include <limits.h>
 #include "../lang/result.hpp"
 #include "../lang/string.hpp"
+#include "../lang/opt.hpp"
 
 using namespace std;
 
@@ -26,11 +27,11 @@ Result<String, GenericErr> get_cwd() {
     char cwd[PATH_MAX];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        return Result<String, GenericErr>(String(cwd), nullopt);
+        return Result<String, GenericErr>(String(cwd), None<GenericErr>());
     }
 
     return Result(
         String(""),
-        optional<GenericErr>(GenericErr("Failed to get current working directory"))
+        Some<GenericErr>(GenericErr("Failed to get current working directory"))
     );
 }
