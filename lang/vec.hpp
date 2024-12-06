@@ -37,6 +37,7 @@ public:
     Vec<T> remove_all(T item) const;
     Vec<T> insert(int index, T item) const;
     Vec<T> insert_all(int index, Vec<T> items) const;
+    void shift(int amount);
 
     // Iterators for range-based for loops
     typename std::vector<T>::const_iterator begin() const;
@@ -176,6 +177,17 @@ Vec<T> Vec<T>::insert_all(int index, Vec<T> items) const {
     }
 
     return inserted_vec;
+}
+
+template <typename T>
+void Vec<T>::shift(int amount) {
+    if (amount < 0) {
+        panic("Cannot shift a negative amount");
+    }
+
+    for (int i = 0; i < amount; i++) {
+        data.erase(data.begin());
+    }
 }
 
 template <typename T>
