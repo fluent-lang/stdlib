@@ -17,19 +17,20 @@
 #include <unistd.h>
 #include <limits.h>
 #include "../lang/result.hpp"
+#include "../lang/string.hpp"
 
 using namespace std;
 
-Result<string, GenericErr> get_cwd() {
+Result<String, GenericErr> get_cwd() {
     // Allocate a buffer for the current working directory
     char cwd[PATH_MAX];
 
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
-        return Result<string, GenericErr>(string(cwd), nullopt);
+        return Result<String, GenericErr>(String(cwd), nullopt);
     }
 
     return Result(
-        string(""), 
+        String(""),
         optional<GenericErr>(GenericErr("Failed to get current working directory"))
     );
 }
