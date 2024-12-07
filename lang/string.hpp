@@ -16,15 +16,13 @@
 
 #include <string>
 #include <cstring>
-#include <algorithm>
 #include "./vec.hpp"
 
 class String {
 
-    private:
-        std::string data;
+    std::string data;
     public:
-        String(const char* data);
+        explicit String(const char* data);
 
         const char* to_str() const;
         void push_raw(const char* additional_data);
@@ -60,6 +58,8 @@ class String {
         bool compare_string(String another_string) const;
         // Makes a new string joining the current string with another string
         String join(String other_str);
+
+        friend bool operator==(const String& obj1, const String& obj2);
 };
 
 std::ostream& operator<<(std::ostream& os, const String& res);
