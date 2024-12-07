@@ -24,7 +24,7 @@ class Optional {
         std::optional<T> value;
     public:
         Optional() = default;
-        Optional(T value);
+        explicit Optional(T value);
         
         // Non-const unwrap (for moving the value)
         T&& unwrap() &&;
@@ -76,7 +76,7 @@ std::ostream& operator<<(std::ostream& os, const Optional<T>& res) {
     os << "Optional(";
 
     if (res.is_some()) {
-        os << res.unwrap();  // This should work now for const objects
+        os << res.unwrap();
     } else {
         os << "None";
     }

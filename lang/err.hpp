@@ -18,11 +18,10 @@
 #include "../lang/string.hpp"
 
 class GenericErr {
-    private:
-        String message;
+    String message;
 
     public:
-        GenericErr(const char* message);
+        explicit GenericErr(const char* message);
         String get_message() const;
 };
 
