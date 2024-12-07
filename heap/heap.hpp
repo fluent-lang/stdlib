@@ -15,6 +15,7 @@
 #define HEAP_HPP
 
 #include <utility>
+#include <iostream>
 #include "../lang/panic.h"
 
 template <typename T>
@@ -28,7 +29,7 @@ class Heap {
     public:
         Heap(T stack_allocated_value);
         ~Heap();
-        T& unwrap() {
+        T& unwrap() const {
             if (!heap_data) {
                 panic(
                     "Thread attempted to access an invalid memory reference.\nSurf has exited with a Segmentation Fault (core dumped)."
@@ -74,6 +75,15 @@ Heap<T>& Heap<T>::operator=(Heap&& other) noexcept {
 template <typename T>
 Heap<T>::~Heap() {
     delete heap_data;
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Heap<T>& res) {
+    os << "Heap(";
+    os << "(Native memory); ";
+    os << res.unwrap();
+    os << ")";
+    return os;
 }
 
 #endif
