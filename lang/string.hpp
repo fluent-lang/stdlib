@@ -60,6 +60,7 @@ class String {
         String join(String other_str);
 
         friend bool operator==(const String& obj1, const String& obj2);
+        friend bool operator==(const String& obj1, const char* obj2);
 };
 
 std::ostream& operator<<(std::ostream& os, const String& res);

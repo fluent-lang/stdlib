@@ -12,6 +12,7 @@
 */
 
 #include "string.hpp"
+#include <algorithm>
 
 String::String(const char* str) {
     data = std::string(str);
@@ -202,4 +203,12 @@ std::ostream& operator<<(std::ostream& os, const String& res) {
     os << ")";
 
     return os;
+}
+
+bool operator==(const String& obj1, const String& obj2) {
+    return obj1.compare_string(obj2);
+}
+
+bool operator==(const String& obj1, const char* obj2) {
+    return obj1.compare_raw(obj2);
 }
