@@ -96,16 +96,16 @@ Result<bool, GenericErr> create_http_server(int port, HttpResponse (*callback)(H
         }
 
         string body;
-        if (headers.find("Content-Length") != headers.end()) {
-            int content_length = stoi(headers["Content-Length"].to_str());
+        if (headers.find(String("Content-Length")) != headers.end()) {
+            int content_length = stoi(headers[String("Content-Length")].to_str());
             body.resize(content_length);
             request_stream.read(&body[0], content_length);
         }
 
         MessageEncoding message_encoding = MessageEncoding::TEXT;
 
-        if (headers.find("Content-Type") != headers.end()) {
-            if (string(headers["Content-Type"].to_str()) == string("application/json")) {
+        if (headers.find(String("Content-Type")) != headers.end()) {
+            if (string(headers[String("Content-Type")].to_str()) == string("application/json")) {
                 message_encoding = MessageEncoding::JSON;
             }
         }
