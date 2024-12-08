@@ -56,7 +56,7 @@ public:
 
 template <typename T, typename E = GenericErr>
 Result<T, E> Ok(T&& value) {
-    return Result<T, E>(std::forward<T>(value), std::nullopt);
+    return Result<T, E>(std::forward<T>(value), None<E>());
 }
 
 template <typename E, typename T = void>
