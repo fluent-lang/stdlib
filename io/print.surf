@@ -1,0 +1,30 @@
+/*
+    This file is part of the Surf Language Standard Library (Surf-Standard)
+    This code is released under the GNU General Public License (GPL) v3.0.
+    For more information, please refer to the LICENSE file.
+    ----------------------------------------------------------
+    Copyright (c) 2024 Rodrigo R. & all Surf contributors
+    This program comes with ABSOLUTELY NO WARRANTY; for details use --warranty.
+    This is free software, and you are welcome to redistribute it under certain conditions;
+    type --conditions for details.
+*/
+
+/**
+    * @brief Prints the given argument to the standard output.
+    * @param args The argument to be printed.
+    * @return void
+*/
+pub fun print(arg: str) {
+    // !!! INTERPRETER BUILT-IN FUNCTION !!! //
+    $impl.print(arg);
+}
+
+/**
+    * @brief Prints the given argument with a newline to the standard output.
+    * @param args The arguments to be printed.
+    * @return void
+*/
+pub fun println(arg: str) {
+    // !!! INTERPRETER BUILT-IN FUNCTION !!! //
+    $impl.println(arg);
+}
