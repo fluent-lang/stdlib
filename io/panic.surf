@@ -1,0 +1,20 @@
+/*
+    This file is part of the Surf Language Standard Library (Surf-Standard)
+    This code is released under the GNU General Public License (GPL) v3.0.
+    For more information, please refer to the LICENSE file.
+    ----------------------------------------------------------
+    Copyright (C) 2024 Rodrigo R. & All Surf Contributors
+    This program comes with ABSOLUTELY NO WARRANTY; for details type `surf license`.
+    This is free software, and you are welcome to redistribute it under certain conditions;
+    type `surf license --full` for details.
+*/
+
+/**
+    * @brief Prints the given argument to the standard output and exits the program with a status code of 1.
+    * @param args The argument to be printed.
+    * @return void
+*/
+pub fun panic(arg: str) {
+    // !!! INTERPRETER BUILT-IN FUNCTION !!! //
+    impl_panic(arg);
+}
