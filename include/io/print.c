@@ -9,26 +9,25 @@
     type `fluent license --full` for details.
 */
 
+#include <stdio.h>
+
 /**
     * @brief Prints the given argument to the standard output.
-    * @param str The argument to be printed.
+    * @param str The string to be printed.
     * @return void
 */
-pub fun print(_arg: str) {
-    // COMPILER BUILT IN //
-    // This file serves solely as a "wrapper"
-    // that tells the analyzer this function exists.
-    // The relevant code is built by the compiler.
+void print(const char* str) {
+    printf("%s", str);
 }
 
 /**
     * @brief Prints the given argument with a newline to the standard output.
-    * @param str The arguments to be printed.
+    * @param str The string to be printed.
     * @return void
 */
-pub fun println(_arg: str) {
-    // COMPILER BUILT IN //
-    // This file serves solely as a "wrapper"
-    // that tells the analyzer this function exists.
-    // The relevant code is built by the compiler.
+void println(const char* str) {
+    printf("%s\n", str);
 }
+
+extern void print(const char* str);
+extern void println(const char* str);
