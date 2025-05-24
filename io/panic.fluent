@@ -11,10 +11,12 @@
 
 /**
     * @brief Prints the given argument to the standard output and exits the program with a status code of 1.
-    * @param args The argument to be printed.
+    * @param _arg The argument to be printed.
     * @return void
 */
-pub fun panic(arg: str) {
-    // !!! INTERPRETER BUILT-IN FUNCTION !!! //
-    impl_panic(arg);
+pub fun panic(_arg: str) {
+    // COMPILER BUILT IN //
+    // This file serves solely as a "wrapper"
+    // that tells the analyzer this function exists.
+    // The relevant code is built by the compiler.
 }
